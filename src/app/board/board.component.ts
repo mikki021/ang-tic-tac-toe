@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
+
 export class BoardComponent implements OnInit {
+
 
   squares: any[];
   xIsNext: boolean;
@@ -28,6 +29,7 @@ export class BoardComponent implements OnInit {
     if (!this.winner && !this.squares[index]) {
       this.squares.splice(index, 1, this.player);
       this.xIsNext = !this.xIsNext;
+      this.calculateWinner();
     }
   }
 
@@ -55,6 +57,23 @@ export class BoardComponent implements OnInit {
 
   get player() {
     return this.xIsNext ? 'X' : 'O';
+  }
+
+  get allMovesMade() {
+    return this.squares.every(square => !!square);
+  }
+
+  get gameStatus() {
+    const CURRENT_PLAYER_TEXT = 'Current player: ';
+    const PLAYER_SHORTCODE = ':player';
+    const GAME_WINNER_TEXT = 'Player ' + PLAYER_SHORTCODE + ' won the game!';
+    const GAME_DRAW_TEXT = 'Game is a draw!';
+
+    return this.winner
+      ? GAME_WINNER_TEXT.replace(PLAYER_SHORTCODE, this.player)
+      : this.allMovesMade
+        ? GAME_DRAW_TEXT
+        : CURRENT_PLAYER_TEXT + this.player;
   }
 
 }
