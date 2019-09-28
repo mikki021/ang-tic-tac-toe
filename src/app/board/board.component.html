@@ -4,6 +4,7 @@
 <main>
   <app-square
     *ngFor="let square of squares; let i = index"
+    [winningSquare]="isWinningSquare(i)"
     [value]="square"
     (click)="makeMove(i)">
   </app-square>

@@ -12,17 +12,21 @@ export class BoardComponent implements OnInit {
   squares: any[];
   xIsNext: boolean;
   winner: string;
+  winningSquares: any[];
+  flash: boolean;
 
   constructor() { }
 
   ngOnInit() {
     this.newGame();
+    setInterval(() => { this.flash = !this.flash; }, 500);
   }
 
   newGame() {
     this.squares = Array(9).fill(null);
     this.winner = null;
     this.xIsNext = true;
+    this.winningSquares = [];
   }
 
   makeMove(index: number) {
@@ -50,11 +54,17 @@ export class BoardComponent implements OnInit {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (this.squares[a] && this.squares[a] === this.squares[b] && this.squares[a] === this.squares[c]) {
+        this.winningSquares = [a, b, c];
+
         return this.squares[a];
       }
     }
 
     return null;
+  }
+
+  isWinningSquare(index) {
+    return this.flash && this.winningSquares.length && this.winningSquares.includes(index);
   }
 
   get player() {
