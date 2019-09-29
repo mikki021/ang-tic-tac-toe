@@ -14,6 +14,8 @@ export class BoardComponent implements OnInit {
   winner: string;
   winningSquares: any[];
   flash: boolean;
+  moves: any[];
+  isReplaying: boolean;
 
   constructor() { }
 
@@ -27,12 +29,15 @@ export class BoardComponent implements OnInit {
     this.winner = null;
     this.xIsNext = true;
     this.winningSquares = [];
+    this.moves = [];
+    this.isReplaying = false;
   }
 
   makeMove(index: number) {
     if (!this.winner && !this.squares[index]) {
       this.squares.splice(index, 1, this.player);
       this.winner = this.calculateWinner();
+      this.moves.push([...this.squares]);
       if (!this.winner) {
         this.xIsNext = !this.xIsNext;
       }
@@ -65,6 +70,19 @@ export class BoardComponent implements OnInit {
 
   isWinningSquare(index) {
     return this.flash && this.winningSquares.length && this.winningSquares.includes(index);
+  }
+
+  replayGame() {
+    if (this.winner) {
+      this.isReplaying = true;
+      this.squares = Array(9).fill(null);
+      this.moves.forEach((move, index) => {
+        setTimeout(() => {
+          this.squares = move;
+        }, index * 700);
+      });
+      this.isReplaying = false;
+    }
   }
 
   get player() {
