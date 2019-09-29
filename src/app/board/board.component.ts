@@ -25,11 +25,16 @@ export class BoardComponent implements OnInit {
   }
 
   newGame() {
+    this.reset();
+    this.moves = [];
+    this.isReplaying = false;
+  }
+
+  reset() {
     this.squares = Array(9).fill(null);
     this.winner = null;
     this.xIsNext = true;
     this.winningSquares = [];
-    this.moves = [];
     this.isReplaying = false;
   }
 
@@ -37,7 +42,7 @@ export class BoardComponent implements OnInit {
     if (!this.winner && !this.squares[index]) {
       this.squares.splice(index, 1, this.player);
       this.winner = this.calculateWinner();
-      this.moves.push([...this.squares]);
+      this.moves.push(index);
       if (!this.winner) {
         this.xIsNext = !this.xIsNext;
       }
@@ -75,11 +80,11 @@ export class BoardComponent implements OnInit {
   replayGame() {
     if (this.winner) {
       this.isReplaying = true;
-      this.squares = Array(9).fill(null);
+      this.reset();
       this.moves.forEach((move, index) => {
         setTimeout(() => {
-          this.squares = move;
-        }, index * 700);
+          this.makeMove(move);
+        }, (index + 1) * 1000);
       });
       this.isReplaying = false;
     }
