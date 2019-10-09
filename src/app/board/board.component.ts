@@ -1,7 +1,5 @@
 import { UtilsService } from './../utils.service';
 import { Component, OnInit } from '@angular/core';
-import { async } from '@angular/core/testing';
-import { resolve } from 'q';
 
 @Component({
   selector: 'app-board',
