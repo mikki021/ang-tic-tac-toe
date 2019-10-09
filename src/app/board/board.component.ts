@@ -1,3 +1,4 @@
+import { UtilsService } from './../utils.service';
 import { Component, OnInit } from '@angular/core';
 import { async } from '@angular/core/testing';
 import { resolve } from 'q';
@@ -18,8 +19,11 @@ export class BoardComponent implements OnInit {
   flash: boolean;
   moves: any[];
   isReplaying: boolean;
+  utils: UtilsService;
 
-  constructor() { }
+  constructor(utilsService: UtilsService) {
+    this.utils = utilsService;
+  }
 
   ngOnInit() {
     this.newGame();
@@ -100,7 +104,7 @@ export class BoardComponent implements OnInit {
               if (i >= this.moves.length) {
                 return { value: null, done: true };
               }
-              await this.delay(stepInterval);
+              await this.utils.delay(stepInterval);
               const move = this.moves[i];
               i++;
 
@@ -116,10 +120,6 @@ export class BoardComponent implements OnInit {
 
       this.isReplaying = false;
     }
-  }
-
-  delay(timeout: number) {
-    return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
   get player() {
