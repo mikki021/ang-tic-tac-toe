@@ -6,7 +6,6 @@
     *ngFor="let square of squares; let i = index"
     [winningSquare]="isWinningSquare(i)"
     [value]="square"
-    [disabled]="false"
-    (click)="makeMove(i)">
+    (click)="fieldClick(i)">
   </app-square>
 </main>

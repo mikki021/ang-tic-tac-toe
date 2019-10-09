@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { async } from '@angular/core/testing';
+import { resolve } from 'q';
 
 @Component({
   selector: 'app-board',
@@ -35,6 +37,12 @@ export class BoardComponent implements OnInit {
     this.winner = null;
     this.xIsNext = true;
     this.winningSquares = [];
+  }
+
+  fieldClick(i: number) {
+    if (!this.isReplaying) {
+      this.makeMove(i);
+    }
   }
 
   makeMove(index: number) {
@@ -78,23 +86,40 @@ export class BoardComponent implements OnInit {
     return this.flash && this.winningSquares.length && this.winningSquares.includes(index);
   }
 
-  replayGame() {
+  async replayGame() {
     const stepInterval = 700;
 
     if (this.winner) {
       this.isReplaying = true;
       this.reset();
-      this.moves.forEach((move, index) => {
-        setTimeout(() => {
-          this.makeMove(move);
-        }, (index + 1) * stepInterval);
-        if (index === this.moves.length - 1) {
-          setTimeout(() => {
-            this.isReplaying = false;
-          }, (index + 1) * stepInterval);
+      const delayedMoves = {
+        [Symbol.asyncIterator]: () => {
+          let i = 0;
+          return {
+            next: async () => {
+              if (i >= this.moves.length) {
+                return { value: null, done: true };
+              }
+              await this.delay(stepInterval);
+              const move = this.moves[i];
+              i++;
+
+              return { value: move, done: false };
+            }
+          };
         }
-      });
+      };
+
+      for await (const move of delayedMoves) {
+        this.makeMove(move);
+      }
+
+      this.isReplaying = false;
     }
+  }
+
+  delay(timeout: number) {
+    return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
   get player() {
