@@ -91,7 +91,7 @@ export class BoardComponent implements OnInit {
   async replayGame() {
     const stepInterval = 700;
 
-    if (this.winner) {
+    if (this.gameFinished) {
       this.isReplaying = true;
       this.reset();
       const delayedMoves = {
@@ -126,6 +126,14 @@ export class BoardComponent implements OnInit {
 
   get allMovesMade() {
     return this.squares.every(square => !!square);
+  }
+
+  get gameInProgress() {
+    return this.moves.length && !this.gameFinished;
+  }
+
+  get gameFinished() {
+    return this.winner || this.allMovesMade;
   }
 
   get gameStatus() {

@@ -1,5 +1,5 @@
-<button nbButton outline status="danger" (click)="newGame()">New Game</button>
-<button nbButton outline status="warning" *ngIf="winner" (click)="replayGame()">View Replay</button>
+<button nbButton outline status="danger"  *ngIf="!gameInProgress" (click)="newGame()">New Game</button>
+<button nbButton outline status="warning" *ngIf="gameFinished" (click)="replayGame()">View Replay</button>
 <h2>{{ gameStatus }}</h2>
 <main>
   <app-square
